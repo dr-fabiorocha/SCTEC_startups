@@ -4,7 +4,7 @@ var router = express.Router();
 
 router.post("/buscaPorSegmentos", async function (request, response, next) {
   console.log("Obtem a lista de startups que são de segmentos de interesse");
-  const dados = request.body.lista;
+  const dados = request.body.segmentos;
 
   let a = await Startup.buscaPorSegmentos(dados);
   response.json(a);

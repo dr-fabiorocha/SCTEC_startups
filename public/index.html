@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Teste da API REST de Startups</title>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: #f5f7fb;
+                color: #1f2937;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 24px;
+            }
+            h1,
+            h2,
+            h3 {
+                margin-top: 0;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            .card {
+                background: #fff;
+                border-radius: 14px;
+                padding: 18px;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            }
+            .row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                margin-bottom: 12px;
+            }
+            .row-1 {
+                margin-bottom: 12px;
+            }
+            label {
+                display: block;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 6px;
+            }
+            input,
+            textarea,
+            select {
+                width: 100%;
+                padding: 10px 12px;
+                border: 1px solid #cbd5e1;
+                border-radius: 10px;
+                font-size: 14px;
+                background: #fff;
+            }
+            textarea {
+                min-height: 90px;
+                resize: vertical;
+            }
+            .buttons {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 12px;
+            }
+            button {
+                border: none;
+                border-radius: 10px;
+                padding: 10px 14px;
+                cursor: pointer;
+                background: #2563eb;
+                color: white;
+                font-weight: bold;
+            }
+            button.secondary {
+                background: #475569;
+            }
+            button.danger {
+                background: #dc2626;
+            }
+            button.success {
+                background: #059669;
+            }
+            button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+            .small {
+                font-size: 13px;
+                color: #475569;
+            }
+            pre {
+                background: #0f172a;
+                color: #e2e8f0;
+                padding: 14px;
+                border-radius: 10px;
+                overflow: auto;
+                min-height: 180px;
+            }
+            .startup-list {
+                display: grid;
+                gap: 10px;
+            }
+            .startup-item {
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 12px;
+                background: #f8fafc;
+            }
+            .tag {
+                display: inline-block;
+                background: #dbeafe;
+                color: #1d4ed8;
+                border-radius: 999px;
+                padding: 4px 10px;
+                margin: 4px 6px 0 0;
+                font-size: 12px;
+            }
+            .status {
+                margin-top: 12px;
+                padding: 10px 12px;
+                border-radius: 10px;
+                font-size: 14px;
+            }
+            .status.ok {
+                background: #dcfce7;
+                color: #166534;
+            }
+            .status.error {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+            @media (max-width: 900px) {
+                .grid {
+                    grid-template-columns: 1fr;
+                }
+                .row {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app" class="container">
+            <h1>Teste da API REST de Startups</h1>
+            <p class="small">
+                Interface em HTML + Vue para testar os endpoints de cadastro,
+                listagem, busca, atualização e remoção.
+            </p>
+
+            <div class="card row-1">
+                <label for="baseUrl">URL base da API</label>
+                <input
+                    id="baseUrl"
+                    v-model="baseUrl"
+                    placeholder="Ex.: http://localhost:5000"
+                />
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <h2>Startup</h2>
+
+                    <div class="row">
+                        <div>
+                            <label>Nome</label>
+                            <input
+                                v-model="form.nome"
+                                placeholder="Nome da startup"
+                            />
+                        </div>
+                        <div>
+                            <label>Responsável</label>
+                            <input
+                                v-model="form.responsavel"
+                                placeholder="Nome do responsável"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label>Sede</label>
+                            <input
+                                v-model="form.sede"
+                                placeholder="Cidade / sede"
+                            />
+                        </div>
+                        <div>
+                            <label>E-mail</label>
+                            <input
+                                v-model="form.email"
+                                placeholder="email@dominio.com"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label>Status</label>
+                            <input
+                                v-model="form.status"
+                                placeholder="ativa, incubada..."
+                            />
+                        </div>
+                        <div>
+                            <label>Link</label>
+                            <input
+                                v-model="form.link"
+                                placeholder="Link para pitch"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label>Página</label>
+                            <input
+                                v-model="form.pagina"
+                                placeholder="https://site.com"
+                            />
+                        </div>
+                        <div>
+                            <label>Nome para busca/edição/remoção</label>
+                            <input
+                                v-model="nomeAlvo"
+                                placeholder="Nome usado na URL"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label>Segmentos (separados por vírgula)</label>
+                            <input
+                                v-model="segmentosTexto"
+                                placeholder="tecnologia, fintech, agro"
+                            />
+                        </div>
+                        <div>
+                            <label>Objetivos (separados por vírgula)</label>
+                            <input
+                                v-model="objetivosTexto"
+                                placeholder="divulgação, busca de investimento"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="buttons">
+                        <button
+                            class="success"
+                            @click="criarStartup"
+                            :disabled="loading"
+                        >
+                            Criar startup
+                        </button>
+                        <button @click="listarStartups" :disabled="loading">
+                            Listar startups
+                        </button>
+                        <button
+                            class="secondary"
+                            @click="obterStartup"
+                            :disabled="loading"
+                        >
+                            Buscar por nome
+                        </button>
+                        <button
+                            class="secondary"
+                            @click="atualizarStartup"
+                            :disabled="loading"
+                        >
+                            Atualizar startup
+                        </button>
+                        <button
+                            class="danger"
+                            @click="removerStartup"
+                            :disabled="loading"
+                        >
+                            Remover startup
+                        </button>
+                        <button class="secondary" @click="carregarExemplo">
+                            Carregar exemplo
+                        </button>
+                        <button class="secondary" @click="limparFormulario">
+                            Limpar formulário
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Busca por segmentos</h2>
+                    <label
+                        >Segmentos de interesse (separados por vírgula)</label
+                    >
+                    <input
+                        v-model="buscaSegmentosTexto"
+                        placeholder="tecnologia, agro"
+                    />
+
+                    <div class="buttons">
+                        <button @click="buscarPorSegmentos" :disabled="loading">
+                            Buscar por segmentos
+                        </button>
+                    </div>
+
+                    <h3 style="margin-top: 22px">Resumo rápido</h3>
+                    <p class="small">
+                        Total carregado: <strong>{{ startups.length }}</strong>
+                    </p>
+
+                    <div class="startup-list" v-if="startups.length">
+                        <div
+                            class="startup-item"
+                            v-for="(item, index) in startups"
+                            :key="index"
+                        >
+                            <strong>{{ item.nome || '(sem nome)' }}</strong
+                            ><br />
+                            <span class="small"
+                                >Responsável: {{ item.responsavel || '-'
+                                }}</span
+                            ><br />
+                            <span v-if="item.segmento && item.segmento.length">
+                                <span
+                                    class="tag"
+                                    v-for="seg in item.segmento"
+                                    :key="seg"
+                                    >{{ seg }}</span
+                                >
+                            </span>
+                        </div>
+                    </div>
+                    <p v-else class="small">Nenhuma startup carregada.</p>
+                </div>
+            </div>
+
+            <div v-if="mensagem" class="status" :class="erro ? 'error' : 'ok'">
+                {{ mensagem }}
+            </div>
+
+            <div class="grid" style="margin-top: 20px">
+                <div class="card">
+                    <h2>Última requisição</h2>
+                    <pre>{{ ultimaRequisicao }}</pre>
+                </div>
+                <div class="card">
+                    <h2>Última resposta</h2>
+                    <pre>{{ ultimaResposta }}</pre>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const { createApp } = Vue;
+
+            createApp({
+                data() {
+                    return {
+                        baseUrl: "http://localhost:5000",
+                        loading: false,
+                        mensagem: "",
+                        erro: false,
+                        nomeAlvo: "",
+                        segmentosTexto: "",
+                        objetivosTexto: "",
+                        buscaSegmentosTexto: "",
+                        startups: [],
+                        ultimaRequisicao: "",
+                        ultimaResposta: "",
+                        form: {
+                            nome: "",
+                            responsavel: "",
+                            sede: "",
+                            segmento: [],
+                            email: "",
+                            status: "",
+                            link: "",
+                            pagina: "",
+                            objetivo: [],
+                        },
+                    };
+                },
+                methods: {
+                    normalizarLista(texto) {
+                        return texto
+                            .split(",")
+                            .map((item) => item.trim())
+                            .filter(Boolean);
+                    },
+
+                    montarPayload() {
+                        return {
+                            nome: this.form.nome,
+                            responsavel: this.form.responsavel,
+                            sede: this.form.sede,
+                            segmento: this.normalizarLista(this.segmentosTexto),
+                            email: this.form.email,
+                            status: this.form.status,
+                            link: this.form.link,
+                            pagina: this.form.pagina,
+                            objetivo: this.normalizarLista(this.objetivosTexto),
+                        };
+                    },
+
+                    async enviar(url, options = {}) {
+                        this.loading = true;
+                        this.mensagem = "";
+                        this.erro = false;
+
+                        const metodo = options.method || "GET";
+                        const bodyObj = options.body
+                            ? JSON.parse(options.body)
+                            : null;
+                        this.ultimaRequisicao = JSON.stringify(
+                            { url, method: metodo, body: bodyObj },
+                            null,
+                            2,
+                        );
+
+                        try {
+                            const response = await fetch(url, options);
+                            const text = await response.text();
+
+                            let data;
+                            try {
+                                data = text ? JSON.parse(text) : null;
+                            } catch {
+                                data = text;
+                            }
+
+                            this.ultimaResposta = JSON.stringify(data, null, 2);
+
+                            if (!response.ok) {
+                                throw new Error(`HTTP ${response.status}`);
+                            }
+
+                            return data;
+                        } catch (e) {
+                            this.erro = true;
+                            this.mensagem = `Erro na requisição: ${e.message}`;
+                            this.ultimaResposta = String(e);
+                            throw e;
+                        } finally {
+                            this.loading = false;
+                        }
+                    },
+
+                    async listarStartups() {
+                        const url = `${this.baseUrl}/REST/startup`;
+                        const data = await this.enviar(url);
+                        this.startups = Array.isArray(data) ? data : [];
+                        this.mensagem = "Listagem concluída.";
+                    },
+
+                    async obterStartup() {
+                        if (!this.nomeAlvo.trim()) {
+                            this.erro = true;
+                            this.mensagem =
+                                "Informe o nome da startup para buscar.";
+                            return;
+                        }
+
+                        const url = `${this.baseUrl}/REST/startup/${encodeURIComponent(this.nomeAlvo.trim())}`;
+                        const data = await this.enviar(url);
+                        this.mensagem = "Busca por nome concluída.";
+
+                        if (data && typeof data === "object") {
+                            this.preencherFormulario(data);
+                            this.startups = [data];
+                        }
+                    },
+
+                    async criarStartup() {
+                        const payload = this.montarPayload();
+                        const url = `${this.baseUrl}/REST/startup`;
+                        const data = await this.enviar(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload),
+                        });
+                        this.mensagem = "Startup criada com sucesso.";
+                        if (data) {
+                            this.preencherFormulario(data);
+                        }
+                    },
+
+                    async atualizarStartup() {
+                        const alvo =
+                            this.nomeAlvo.trim() || this.form.nome.trim();
+                        if (!alvo) {
+                            this.erro = true;
+                            this.mensagem =
+                                "Informe o nome da startup que será atualizada.";
+                            return;
+                        }
+
+                        const payload = this.montarPayload();
+                        const url = `${this.baseUrl}/REST/startup/${encodeURIComponent(alvo)}`;
+                        const data = await this.enviar(url, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload),
+                        });
+                        this.mensagem = "Startup atualizada com sucesso.";
+                        if (data) {
+                            this.preencherFormulario(data);
+                            this.startups = [data];
+                        }
+                    },
+
+                    async removerStartup() {
+                        const alvo =
+                            this.nomeAlvo.trim() || this.form.nome.trim();
+                        if (!alvo) {
+                            this.erro = true;
+                            this.mensagem =
+                                "Informe o nome da startup que será removida.";
+                            return;
+                        }
+
+                        const url = `${this.baseUrl}/REST/startup/${encodeURIComponent(alvo)}`;
+                        const data = await this.enviar(url, {
+                            method: "DELETE",
+                        });
+                        this.mensagem = `Resultado da remoção: ${typeof data === "string" ? data : "ok"}`;
+                        this.startups = [];
+                    },
+
+                    async buscarPorSegmentos() {
+                        const segmentos = this.normalizarLista(
+                            this.buscaSegmentosTexto,
+                        );
+                        const url = `${this.baseUrl}/REST/startup/buscaPorSegmentos`;
+                        const data = await this.enviar(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ segmentos }),
+                        });
+                        this.startups = Array.isArray(data) ? data : [];
+                        this.mensagem = "Busca por segmentos concluída.";
+                    },
+
+                    preencherFormulario(data) {
+                        this.form.nome = data.nome || "";
+                        this.form.responsavel = data.responsavel || "";
+                        this.form.sede = data.sede || "";
+                        this.form.email = data.email || "";
+                        this.form.status = data.status || "";
+                        this.form.link = data.link || "";
+                        this.form.pagina = data.pagina || "";
+                        this.segmentosTexto = Array.isArray(data.segmento)
+                            ? data.segmento.join(", ")
+                            : "";
+                        this.objetivosTexto = Array.isArray(data.objetivo)
+                            ? data.objetivo.join(", ")
+                            : "";
+                        this.nomeAlvo = data.nome || "";
+                    },
+
+                    limparFormulario() {
+                        this.form = {
+                            nome: "",
+                            responsavel: "",
+                            sede: "",
+                            segmento: [],
+                            email: "",
+                            status: "",
+                            link: "",
+                            pagina: "",
+                            objetivo: [],
+                        };
+                        this.nomeAlvo = "";
+                        this.segmentosTexto = "";
+                        this.objetivosTexto = "";
+                        this.buscaSegmentosTexto = "";
+                        this.mensagem = "Formulário limpo.";
+                        this.erro = false;
+                    },
+
+                    carregarExemplo() {
+                        const exemplo = {
+                            nome: "AgroTech Sul",
+                            responsavel: "Fabio Rocha",
+                            sede: "Araranguá",
+                            email: "contato@agrotechsul.com",
+                            status: "ativa",
+                            link: "https://exemplo.com/pitch",
+                            pagina: "https://exemplo.com",
+                            segmento: ["agro", "tecnologia"],
+                            objetivo: ["divulgação", "busca de investimento"],
+                        };
+                        this.preencherFormulario(exemplo);
+                        this.buscaSegmentosTexto = "agro, tecnologia";
+                        this.mensagem = "Exemplo carregado.";
+                        this.erro = false;
+                    },
+                },
+            }).mount("#app");
+        </script>
+    </body>
+</html>

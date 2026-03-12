@@ -1,6 +1,6 @@
 # Plataforma de Conexão entre Startups e Entusiastas
 
-#teste
+
 
 Este projeto de implementação é parte dos requisitos para o processo de seleção para a trilha de IA para DEVs do edital SCTEC.
 
