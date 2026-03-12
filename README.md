@@ -1,5 +1,7 @@
 # Plataforma de Conexão entre Startups e Entusiastas
 
+#teste
+
 Este projeto de implementação é parte dos requisitos para o processo de seleção para a trilha de IA para DEVs do edital SCTEC.
 
 
@@ -46,7 +48,7 @@ O segundo tipo de usuário é o **entusiasta**. O entusiasta é uma pessoa inter
 
 ## Descrição da solução
 
-O sistema consiste em uma **aplicação web que disponibiliza uma API REST**. Essa API poderá ser consumida tanto por um *frontend*  executado no navegador** quanto por **aplicações móveis**.
+O sistema consiste em uma **aplicação web que disponibiliza uma API REST**. Essa API poderá ser consumida tanto por um *frontend*  executado no navegador  quanto por **aplicações móveis**.
 
 O primeiro passo para utilizar o sistema é realizar o **cadastro de um usuário**, criando assim suas credenciais de acesso. Após efetuar o login, o usuário escolhe qual papel deseja desempenhar no sistema: **proprietário de startup** ou **entusiasta**.
 
@@ -143,5 +145,5 @@ node index.js
 
 Neste momento o servidor em nodeJS roda na porta 5000. No browser do cliente deve-se utilizar http://localhost:5000 (caso esteja na mesma máquina) ou http://hostname:5000 em máquina diferente. Como  a aplicação *frontend* esta sendo servida diretamente pelo Express, o problema de acesso a recursos no servidor pelo browser  - CORS ( (Cross-Origin Resource Sharing)  não ocorre. 
 
-
+A API REST pode ser testanda utilizando ferramentas como o Postman que permite escolher o verbo (GET, POST, DELETE, PUT), inserir a URL
 ## Pitch do Projeto
