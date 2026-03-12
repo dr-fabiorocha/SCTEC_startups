@@ -4,20 +4,57 @@ const StartupSchema = new mongoose.Schema(
   {
     nome: {
       type: String,
-      required: [true, "O codigo do programa é obrigatório"],
+      required: [true, "O nome da startup é obrigatório"],
       unique: true,
+      trim: true,
     },
-    responsavel: { type: String },
-    sede: { type: String, default: "" },
+
+    responsavel: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    sede: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     segmento: [{ type: String, lowercase: true }],
-    email: { type: String, default: "" },
-    status: { type: String, default: "" },
-    link: { type: String, default: "" },
-    pagina: { type: String, default: "" },
-    objetivo: [String],
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      default: "",
+    },
+
+    status: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    link: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    pagina: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    objetivo: [
+      {
+        type: String,
+        enum: ["divulgacao", "investimento", "socios"],
+      },
+    ],
   },
   {
-    versionKey: false, // ❌ remove __v
+    versionKey: false,
     timestamps: false,
   },
 );
