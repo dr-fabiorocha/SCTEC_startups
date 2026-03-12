@@ -1,0 +1,24 @@
+POST /REST/startup/buscaPorSegmentos
+Obtem a listagem completa de todas as startups de segmentos de interesse. Uma startup pode ter um ou mais segmentos de atuação. Os dados (lista de segmentos para pesquisar) são enviados no corpo da mensagem
+
+get /REST/startup
+Obtem a listagem de todas as startups
+retorna um json com um vetor de startups contendo apenas os campos nome, responsável e segmento de atuação
+
+get /REST/startup:nome
+Obtem as informações completas de uma startup em particular
+
+POST /REST/startup
+Cria um nova startup. Os dados são enviados no corpo da mensagem
+Retorna um json com os dados ou null se falhou
+
+PUT /REST/startup/:nome
+exemplo: /REST/startup/coleta de lixo
+Atualiza uma startup com base no nome. Os dados são enviados no corpo da mensagem.
+retorna os dados modificados ou null em caso de falha
+
+
+DELETE /REST/startup/:nome
+exemplo http://localhost:5000/REST/startup/novo ifood
+Remove a startup com base no seu nome.
+return uma string sucesso ou falha
