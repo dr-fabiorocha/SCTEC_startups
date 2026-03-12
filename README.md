@@ -147,3 +147,5 @@ Neste momento o servidor em nodeJS roda na porta 5000. No browser do cliente dev
 
 A API REST pode ser testanda utilizando ferramentas como o Postman que permite escolher o verbo (GET, POST, DELETE, PUT), inserir a URL
 ## Pitch do Projeto
+
+O pitch está disponível no site [https://youtu.be/cXk_7scS1NU](https://youtu.be/cXk_7scS1NU)
